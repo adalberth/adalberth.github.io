@@ -1,29 +1,45 @@
 var grid
 var needles
 var iterations = 10
-var maxLines = 500
+var maxNeedles = 2000
+var removeInterval = 1
+
+
+var REMOVE_NEEDLES = true
+var REMOVE_ALL_NEEDLES = false
+var SHOW_SEARCH_NEEDLES = false
+var SHOW_NEEDLE_BOUNDING_BOX = false
 
 function setup() {
   createCanvas(window.innerWidth,window.innerHeight)
   background(255)
-
-  needles = []
-  var needle = new Needle()
-  needles.push(needle)
+  initialNeedles()
 }
 
-var rotation = 0;
 function draw() {
-  // background(255)
+  background(255)
+  createNeedles()
 
+  // var a = createVector(300, 300)
+  // var b = createVector(500, 300)
+  // var t = constrain(map(count, 0, 60 * 1, 0, 1), 0, 1)
+  // line(a.x, a.y, lerp(a.x, b.x, easeInOutExpo(t)), lerp(a.y, b.y, easeInOutExpo(t)))
+  // count++
+
+}
+
+function initialNeedles () {
+  needles = []
+  // createBigNeedle()
+}
+
+function createNeedles () {
   var l = needles.length - 1
   var needle
-  if(l < maxLines) {
+  if(l < maxNeedles) {
     for (var i = 0; i < iterations; i++) {
-      needle = new Needle()
-      // stroke(255, 0, 0)
-      // strokeWeight(3)
-      // needle.draw()
+      needle = new Needle({needles: needles})
+      if (SHOW_SEARCH_NEEDLES) needle.highlight()
       var intersects = false
       for (var j = l; j >= 0; j--) {
         var other = needles[j]
@@ -32,75 +48,51 @@ function draw() {
       }
       if (!intersects){
         needles.push(needle)
-        break;
+        // break;
       }
     }
-  }else{
-    noLoop();
-    console.log('Done!')
   }
 
-  for (var i = 0; i < needles.length; i++) {
-    var boid = needles[i]
+  for (var i = needles.length - 1; i >= 0; i--) {
+    var needle = needles[i]
     stroke(0)
     strokeWeight(1)
-    boid.draw()
+    needle.draw()
+    if (SHOW_NEEDLE_BOUNDING_BOX) {
+      needle.showBoundingBox()
+    }
+  }
+
+  if (REMOVE_NEEDLES) {
+    if(l >= maxNeedles * 0.5 && frameCount % removeInterval === 0) {
+      var needle = needles[floor(random(needles.length))]
+      if(!needle.isAnimating()) needle.remove()
+      removeInterval = floor(random(1, 5))
+    }
+  }
+
+  if (REMOVE_ALL_NEEDLES) {
+    needles.length = 0
+    // createBigNeedle()
+    REMOVE_ALL_NEEDLES = false
   }
 
 }
 
+this.createBigNeedle = function () {
+  var customNeedle = new Needle({
+    needles: needles,
+    a: createVector(random(width * 0.4, width * 0.6), random(height * 0.4, height * 0.6)),
+    l: random(width * 0.3, width * 0.4),
+    strokeWeight: 10,
+    padding: 50
+  })
+  needles.push(customNeedle)
+}
 
-function doPolygonsIntersect (a, b) {
-    var polygons = [a, b];
-    var minA, maxA, projected, i, i1, j, minB, maxB;
-
-    for (i = 0; i < polygons.length; i++) {
-
-        // for each polygon, look at each edge of the polygon, and determine if it separates
-        // the two shapes
-        var polygon = polygons[i];
-        for (i1 = 0; i1 < polygon.length; i1++) {
-
-            // grab 2 vertices to create an edge
-            var i2 = (i1 + 1) % polygon.length;
-            var p1 = polygon[i1];
-            var p2 = polygon[i2];
-
-            // find the line perpendicular to this edge
-            var normal = { x: p2.y - p1.y, y: p1.x - p2.x };
-
-            minA = maxA = undefined;
-            // for each vertex in the first shape, project it onto the line perpendicular to the edge
-            // and keep track of the min and max of these values
-            for (j = 0; j < a.length; j++) {
-                projected = normal.x * a[j].x + normal.y * a[j].y;
-                if (minA === undefined || projected < minA) {
-                    minA = projected;
-                }
-                if (maxA === undefined || projected > maxA) {
-                    maxA = projected;
-                }
-            }
-
-            // for each vertex in the second shape, project it onto the line perpendicular to the edge
-            // and keep track of the min and max of these values
-            minB = maxB = undefined;
-            for (j = 0; j < b.length; j++) {
-                projected = normal.x * b[j].x + normal.y * b[j].y;
-                if (minB === undefined || projected < minB) {
-                    minB = projected;
-                }
-                if (maxB === undefined || projected > maxB) {
-                    maxB = projected;
-                }
-            }
-
-            // if there is no overlap between the projects, the edge we are looking at separates the two
-            // polygons, and we know there is no overlap
-            if (maxA < minB || maxB < minA) {
-                return false;
-            }
-        }
-    }
-    return true;
-};
+function keyPressed () {
+  if (key === 'R') REMOVE_NEEDLES = !REMOVE_NEEDLES
+  if (key === 'H') SHOW_SEARCH_NEEDLES = !SHOW_SEARCH_NEEDLES
+  if (key === 'B') SHOW_NEEDLE_BOUNDING_BOX = !SHOW_NEEDLE_BOUNDING_BOX
+  if (key === ' ') REMOVE_ALL_NEEDLES = !REMOVE_ALL_NEEDLES
+}
