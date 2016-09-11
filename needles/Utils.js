@@ -100,7 +100,7 @@ function easeInCubic( t ) {
 
 // Decelerating to zero velocity
 function easeOutCubic( t ) {
-    const t1 = t - 1;
+    var t1 = t - 1;
     return t1 * t1 * t1 + 1;
 }
 
@@ -116,13 +116,13 @@ function easeInQuart( t ) {
 
 // Decelerating to zero velocity
 function easeOutQuart( t ) {
-    const t1 = t - 1;
+    var t1 = t - 1;
     return 1 - t1 * t1 * t1 * t1;
 }
 
 // Acceleration until halfway, then deceleration
 function easeInOutQuart( t ) {
-    const t1 = t - 1;
+    var t1 = t - 1;
     return t < 0.5 ? 8 * t * t * t * t : 1 - 8 * t1 * t1 * t1 * t1;
 }
 
@@ -133,13 +133,13 @@ function easeInQuint( t ) {
 
 // Decelerating to zero velocity
 function easeOutQuint( t ) {
-    const t1 = t - 1;
+    var t1 = t - 1;
     return 1 + t1 * t1 * t1 * t1 * t1;
 }
 
 // Acceleration until halfway, then deceleration
 function easeInOutQuint( t ) {
-    const t1 = t - 1;
+    var t1 = t - 1;
     return t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * t1 * t1 * t1 * t1 * t1;
 }
 
@@ -172,8 +172,8 @@ function easeInOutExpo( t ) {
         return t;
     }
 
-    const scaledTime = t * 2;
-    const scaledTime1 = scaledTime - 1;
+    var scaledTime = t * 2;
+    var scaledTime1 = scaledTime - 1;
 
     if( scaledTime < 1 ) {
         return 0.5 * Math.pow( 2, 10 * ( scaledTime1 ) );
@@ -186,7 +186,7 @@ function easeInOutExpo( t ) {
 // Increasing velocity until stop
 function easeInCirc( t ) {
 
-    const scaledTime = t / 1;
+    var scaledTime = t / 1;
     return -1 * ( Math.sqrt( 1 - scaledTime * t ) - 1 );
 
 }
@@ -194,7 +194,7 @@ function easeInCirc( t ) {
 // Start fast, decreasing velocity until stop
 function easeOutCirc( t ) {
 
-    const t1 = t - 1;
+    var t1 = t - 1;
     return Math.sqrt( 1 - t1 * t1 );
 
 }
@@ -202,8 +202,8 @@ function easeOutCirc( t ) {
 // Fast increase in velocity, fast decrease in velocity
 function easeInOutCirc( t ) {
 
-    const scaledTime = t * 2;
-    const scaledTime1 = scaledTime - 2;
+    var scaledTime = t * 2;
+    var scaledTime1 = scaledTime - 2;
 
     if( scaledTime < 1 ) {
         return -0.5 * ( Math.sqrt( 1 - scaledTime * scaledTime ) - 1 );
@@ -214,17 +214,17 @@ function easeInOutCirc( t ) {
 }
 
 // Slow movement backwards then fast snap to finish
-function easeInBack( t, magnitude = 1.70158 ) {
-
-    const scaledTime = t / 1;
+function easeInBack( t, m) {
+    var magnitude = magnitude || 1.70158
+    var scaledTime = t / 1;
     return scaledTime * scaledTime * ( ( magnitude + 1 ) * scaledTime - magnitude );
 
 }
 
 // Fast snap to backwards point then slow resolve to finish
-function easeOutBack( t, magnitude = 1.70158 ) {
-
-    const scaledTime = ( t / 1 ) - 1;
+function easeOutBack( t, m) {
+    var magnitude = magnitude || 1.70158
+    var scaledTime = ( t / 1 ) - 1;
 
     return (
         scaledTime * scaledTime * ( ( magnitude + 1 ) * scaledTime + magnitude )
@@ -233,12 +233,12 @@ function easeOutBack( t, magnitude = 1.70158 ) {
 }
 
 // Slow movement backwards, fast snap to past finish, slow resolve to finish
-function easeInOutBack( t, magnitude = 1.70158 ) {
+function easeInOutBack( t, m) {
+    var magnitude = magnitude || 1.70158
+    var scaledTime = t * 2;
+    var scaledTime2 = scaledTime - 2;
 
-    const scaledTime = t * 2;
-    const scaledTime2 = scaledTime - 2;
-
-    const s = magnitude * 1.525;
+    var s = magnitude * 1.525;
 
     if( scaledTime < 1) {
 
@@ -254,17 +254,17 @@ function easeInOutBack( t, magnitude = 1.70158 ) {
 
 }
 // Bounces slowly then quickly to finish
-function easeInElastic( t, magnitude = 0.7 ) {
-
+function easeInElastic( t, m ) {
+    var magnitude = magnitude || 0.7
     if( t === 0 || t === 1 ) {
         return t;
     }
 
-    const scaledTime = t / 1;
-    const scaledTime1 = scaledTime - 1;
+    var scaledTime = t / 1;
+    var scaledTime1 = scaledTime - 1;
 
-    const p = 1 - magnitude;
-    const s = p / ( 2 * Math.PI ) * Math.asin( 1 );
+    var p = 1 - magnitude;
+    var s = p / ( 2 * Math.PI ) * Math.asin( 1 );
 
     return -(
         Math.pow( 2, 10 * scaledTime1 ) *
@@ -274,16 +274,16 @@ function easeInElastic( t, magnitude = 0.7 ) {
 }
 
 // Fast acceleration, bounces to zero
-function easeOutElastic( t, magnitude = 0.7 ) {
-
-    const p = 1 - magnitude;
-    const scaledTime = t * 2;
+function easeOutElastic( t, m ) {
+    var magnitude = magnitude || 0.7
+    var p = 1 - magnitude;
+    var scaledTime = t * 2;
 
     if( t === 0 || t === 1 ) {
         return t;
     }
 
-    const s = p / ( 2 * Math.PI ) * Math.asin( 1 );
+    var s = p / ( 2 * Math.PI ) * Math.asin( 1 );
     return (
         Math.pow( 2, -10 * scaledTime ) *
         Math.sin( ( scaledTime - s ) * ( 2 * Math.PI ) / p )
@@ -292,18 +292,18 @@ function easeOutElastic( t, magnitude = 0.7 ) {
 }
 
 // Slow start and end, two bounces sandwich a fast motion
-function easeInOutElastic( t, magnitude = 0.65 ) {
-
-    const p = 1 - magnitude;
+function easeInOutElastic( t, m ) {
+    var magnitude = magnitude || 0.65
+    var p = 1 - magnitude;
 
     if( t === 0 || t === 1 ) {
         return t;
     }
 
-    const scaledTime = t * 2;
-    const scaledTime1 = scaledTime - 1;
+    var scaledTime = t * 2;
+    var scaledTime1 = scaledTime - 1;
 
-    const s = p / ( 2 * Math.PI ) * Math.asin( 1 );
+    var s = p / ( 2 * Math.PI ) * Math.asin( 1 );
 
     if( scaledTime < 1 ) {
         return -0.5 * (
@@ -322,7 +322,7 @@ function easeInOutElastic( t, magnitude = 0.65 ) {
 // Bounce to completion
 function easeOutBounce( t ) {
 
-    const scaledTime = t / 1;
+    var scaledTime = t / 1;
 
     if( scaledTime < ( 1 / 2.75 ) ) {
 
@@ -330,17 +330,17 @@ function easeOutBounce( t ) {
 
     } else if( scaledTime < ( 2 / 2.75 ) ) {
 
-        const scaledTime2 = scaledTime - ( 1.5 / 2.75 );
+        var scaledTime2 = scaledTime - ( 1.5 / 2.75 );
         return ( 7.5625 * scaledTime2 * scaledTime2 ) + 0.75;
 
     } else if( scaledTime < ( 2.5 / 2.75 ) ) {
 
-        const scaledTime2 = scaledTime - ( 2.25 / 2.75 );
+        var scaledTime2 = scaledTime - ( 2.25 / 2.75 );
         return ( 7.5625 * scaledTime2 * scaledTime2 ) + 0.9375;
 
     } else {
 
-        const scaledTime2 = scaledTime - ( 2.625 / 2.75 );
+        var scaledTime2 = scaledTime - ( 2.625 / 2.75 );
         return ( 7.5625 * scaledTime2 * scaledTime2 ) + 0.984375;
 
     }
