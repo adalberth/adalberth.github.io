@@ -5,10 +5,9 @@ function Needle (opts) {
   this.l = opts.l || (opts.a && opts.b ? p5.Vector.dist(opts.a, opts.b) : random(5, 50))
   this.b = opts.b || createVector(this.l * cos(this.r) + this.a.x, this.l * sin(this.r) + this.a.y)
 
-  this.padding = opts.padding || 1
+  this.padding = opts.padding || 2
   this.time = 0.0001
   this.increment = 0.01
-  this.color = opts.color || color(0)
   this.strokeWeight = opts.strokeWeight || 1
 
   this.needles = opts.needles || []
@@ -59,14 +58,16 @@ function Needle (opts) {
   }
 
   this.draw = function () {
-    noFill()
-    strokeCap(SQUARE)
-    strokeWeight(this.strokeWeight)
-    stroke(this.color, map(t, 0, 1, 100, 255))
 
     this.time += this.increment;
     this.time = this.time > 1 ? 1 : this.time < 0 ? 0 : this.time
     var t = constrain(this.time, 0, 1)
+
+    noFill()
+    strokeCap(SQUARE)
+    strokeWeight(this.strokeWeight)
+    stroke(0, map(t, 0, 1, 50, 100))
+
     if (this.increment > 0) {
       line(this.a.x, this.a.y, lerp(this.a.x, this.b.x, easeOutExpo(t)), lerp(this.a.y, this.b.y, easeOutExpo(t)))
     }else if (t > 0.2) {

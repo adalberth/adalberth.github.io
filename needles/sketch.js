@@ -1,7 +1,7 @@
 var grid
 var needles
 var iterations = 10
-var maxNeedles = 2000
+var maxNeedles = 1000
 var removeInterval = 1
 
 
